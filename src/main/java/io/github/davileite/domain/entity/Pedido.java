@@ -28,6 +28,8 @@ public class Pedido {
 
     @Column(name = "total", precision = 20, scale = 2)
     private BigDecimal Total;
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itens;
 
 
 }
