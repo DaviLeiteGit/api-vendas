@@ -1,10 +1,17 @@
 package io.github.davileite.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "pedido")
 public class Pedido {
@@ -22,55 +29,5 @@ public class Pedido {
     @Column(name = "total", precision = 20, scale = 2)
     private BigDecimal Total;
 
-    public List<ItemPedido> getItens() {
-        return itens;
-    }
 
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
-    }
-
-    @OneToMany(mappedBy = "pedido")
-    private List<ItemPedido> itens;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public LocalDate getDataPedido() {
-        return dataPedido;
-    }
-
-    public void setDataPedido(LocalDate dataPedido) {
-        this.dataPedido = dataPedido;
-    }
-
-    public BigDecimal getTotal() {
-        return Total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        Total = total;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "id=" + id +
-                ", dataPedido=" + dataPedido +
-                ", Total=" + Total +
-                '}';
-    }
 }
