@@ -1,5 +1,6 @@
 package io.github.davileite.rest.controller;
 
+import io.github.davileite.exception.PedidoNaoEncontratoException;
 import io.github.davileite.exception.RegraNegocioException;
 import io.github.davileite.rest.ApiErrors;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,13 @@ public class ApplicationControllerAdvice {
     public ApiErrors handleRegraDeNegocioException(RegraNegocioException ex){
             String mensagemErro = ex.getMessage();
             return new ApiErrors(mensagemErro);
+    }
+
+    @ExceptionHandler(PedidoNaoEncontratoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handePedidoNotFoundException(PedidoNaoEncontratoException ex){
+        return new ApiErrors(ex.getMessage());
+
     }
 
 }

@@ -4,10 +4,12 @@ import io.github.davileite.domain.entity.Cliente;
 import io.github.davileite.domain.entity.ItemPedido;
 import io.github.davileite.domain.entity.Pedido;
 import io.github.davileite.domain.entity.Produto;
+import io.github.davileite.domain.enums.StatusPedido;
 import io.github.davileite.domain.repository.Clientes;
 import io.github.davileite.domain.repository.ItemsPedido;
 import io.github.davileite.domain.repository.Pedidos;
 import io.github.davileite.domain.repository.Produtos;
+import io.github.davileite.exception.PedidoNaoEncontratoException;
 import io.github.davileite.exception.RegraNegocioException;
 import io.github.davileite.rest.dto.ItemPedidoDTO;
 import io.github.davileite.rest.dto.PedidoDTO;
@@ -41,6 +43,7 @@ public class PedidoServiceimpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.REALIZADO);
         List<ItemPedido> itemPedidos = converterItens(pedido,dto.getItems());
         repository.save(pedido);
         itemsPedidoRepository.saveAll(itemPedidos);
@@ -51,6 +54,16 @@ public class PedidoServiceimpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        repository.findById(id)
+                .map(pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return repository.save(pedido);
+                }).orElseThrow( () -> new PedidoNaoEncontratoException());
     }
 
     private List<ItemPedido> converterItens(Pedido pedido,List<ItemPedidoDTO> items){

@@ -3,12 +3,15 @@ package io.github.davileite.rest.controller;
 
 import io.github.davileite.domain.entity.ItemPedido;
 import io.github.davileite.domain.entity.Pedido;
+import io.github.davileite.domain.enums.StatusPedido;
+import io.github.davileite.rest.dto.AtualizacaoStatusPedidoDTO;
 import io.github.davileite.rest.dto.InformacaoItemPedidoDTO;
 import io.github.davileite.rest.dto.InformacoesPedidoDTO;
 import io.github.davileite.rest.dto.PedidoDTO;
 import io.github.davileite.service.PedidoService;
 import static org.springframework.http.HttpStatus.*;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,6 +46,16 @@ public class PedidoController {
                     .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Pedido não encontrado."));
     }
 
+    @PatchMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto){
+        String novoStatus = dto.getNovoStatus();
+        service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
+
+
+    }
+
     private  InformacoesPedidoDTO converter(Pedido pedido){
         return InformacoesPedidoDTO
                 .builder()
@@ -51,6 +64,7 @@ public class PedidoController {
                 .cpf(pedido.getCliente().getCpf())
                 .nomeCliente(pedido.getCliente().getNome())
                 .total(pedido.getTotal())
+                .status(pedido.getStatus().name())
                 .items(converter(pedido.getItens()))
                 .build();
     }

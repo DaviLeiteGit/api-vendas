@@ -1,6 +1,7 @@
 package io.github.davileite.service;
 
 import io.github.davileite.domain.entity.Pedido;
+import io.github.davileite.domain.enums.StatusPedido;
 import io.github.davileite.rest.dto.PedidoDTO;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,4 +14,6 @@ public interface PedidoService {
 
 
     Optional<Pedido> obterPedidoCompleto(Integer id);
+
+    void atualizaStatus(Integer id, StatusPedido statusPedido);
 }
